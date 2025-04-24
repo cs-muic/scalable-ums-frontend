@@ -3,6 +3,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Fonts from 'unplugin-fonts/vite'
 import Layouts from 'vite-plugin-vue-layouts-next'
+import Pages from 'vite-plugin-pages'
 import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
@@ -18,6 +19,7 @@ export default defineConfig({
     VueRouter({
       dts: 'src/typed-router.d.ts',
     }),
+    Pages(),
     Layouts(),
     AutoImport({
       imports: [
@@ -80,7 +82,14 @@ export default defineConfig({
     ],
   },
   server: {
-    port: 3000,
+    port: 8000,
+    proxy: {
+      '/api': {
+        // proxy everything from frontend http://localhost:8080/api/** to backend at http://localhost:8081/api/**
+        // that is why all api path on backend should begin with /api
+        target: 'http://localhost:8080',
+      },
+    },
   },
   css: {
     preprocessorOptions: {
