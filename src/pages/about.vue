@@ -9,3 +9,7 @@
 <style scoped lang="sass">
 
 </style>
+<route lang="yaml">
+meta:
+  requiresAuth: true
+</route>

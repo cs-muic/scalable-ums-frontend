@@ -1,9 +1,9 @@
 <template>
   <v-app>
     <v-app-bar app color="teal darken-3">
-      <v-spacer />
+      <v-spacer/>
 
-      <span class="mr-4">{ $store.state.name }</span>
+      <span class="mr-4">{{ authStore.name }}</span>
       <v-btn
         class="px-0 rounded-circle"
         href=""
@@ -16,43 +16,44 @@
     </v-app-bar>
     <v-navigation-drawer app class="teal darken-4">
       <v-list>
-        <v-list-item class="pl-2">
-          <v-list-item-icon class="ml-0 my-2 mr-3">
-            <v-icon x-large>mdi-cloud-circle</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>UMS</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/">
-          <v-list-item-icon>
+        <v-list-item
+          title="Home"
+          to="/"
+        >
+          <template #prepend>
             <v-icon>mdi-home</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item-content>
+          </template>
         </v-list-item>
-        <v-list-item to="about">
-          <v-list-item-icon>
+        <v-list-item title="About" to="about">
+          <template #prepend>
             <v-icon>mdi-information-outline</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>About</v-list-item-title>
-          </v-list-item-content>
+          </template>
         </v-list-item>
       </v-list>
 
-      <template v-slot:append>
+      <template #append>
         <div class="pa-2">
-          <v-btn block> Logout </v-btn>
+          <v-btn block @click="logout"> Logout</v-btn>
         </div>
       </template>
     </v-navigation-drawer>
     <v-main>
-      <router-view />
+      <router-view/>
     </v-main>
   </v-app>
 </template>
 <script lang="ts" setup>
+
+import {useAuthStore} from '@/stores/auth.ts';
+import axios from 'axios';
+import {useRouter} from 'vue-router';
+
+const authStore = useAuthStore();
+const router = useRouter();
+const logout = async () => {
+  await axios.get('/api/logout');
+  await authStore.logout();
+  await router.push({path: '/login'});
+}
 
 </script>

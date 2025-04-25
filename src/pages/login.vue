@@ -3,6 +3,7 @@
   import { useRouter } from 'vue-router'
   import axios from 'axios'
   import type { VForm } from 'vuetify/components'
+  import { useAuthStore } from '@/stores/auth.ts';
 
   const router = useRouter()
 
@@ -25,6 +26,8 @@
       const response = await axios.post('/api/login', formData)
 
       if (response.data.success) {
+        const authStore = useAuthStore();
+        await authStore.login(response.data.username, response.data.name, response.data.role)
         await router.push({ path: '/' })
       } else {
         errorMessage.value = response.data.message
@@ -111,4 +114,5 @@
 <route lang="yaml">
 meta:
   layout: login
+  requiresAuth: false
 </route>
